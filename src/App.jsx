@@ -10,6 +10,10 @@ function App() {
       console.log('empty')
       return
     }
+    if (AMOUNT<10 || AMOUNT>10000) {
+      console.log('invalid amount')
+      return
+    }
     const response = await fetch('http://localhost:3000/api', {
       method: 'POST',
       headers: {
@@ -72,7 +76,7 @@ function App() {
         </div>
         <div>
           <h1 className="text-gray-700 font-semibold font-mono pl-1">amount</h1>
-          <input ref={amt} className="bg-gray-400 w-full h-10 p-3 focus:outline-0 font-mono text-gray-800 font-bold" type="number" min="1" step="1" />
+          <input ref={amt} className="bg-gray-400 w-full h-10 p-3 focus:outline-0 font-mono text-gray-800 font-bold" type="number" min="10" step="1" />
         </div>
         <button onClick={() => { fetchdata(nm.current.value, msg.current.value, amt.current.value) }} className="w-full rounded-2xl p-3 bg-yellow-300 hover:scale-101 text-yellow-900 font-mono font-bold cursor-pointer">pay</button>
       </div>
