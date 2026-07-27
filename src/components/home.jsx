@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import gitimg from '../assets/github.png'
 import fundimg from '../assets/fund.png'
-import Review from './reviews'
+import Navbar from './navbar'
 
 const Home = () => {
     const cardobj = [
@@ -22,7 +22,7 @@ const Home = () => {
     return (
         <section className="">
             <div className='p-3 bg-gray-100 flex gap-5'>
-                <a href='/signup' className='bg-gray-900 text-white p-3 rounded-3xl text-xs font-semibold hover:scale-101 cursor-pointer pl-5 pr-5 hover:bg-gray-800'>Create Account</a>
+                <a href='/user/signup' className='bg-gray-900 text-white p-3 rounded-3xl text-xs font-semibold hover:scale-101 cursor-pointer pl-5 pr-5 hover:bg-gray-800'>Create Account</a>
                 <a href='https://github.com/realkronos69' className='bg-white text-gray-800 p-3 rounded-3xl text-xs font-bold hover:scale-101 cursor-pointer pl-5 pr-5 hover:bg-gray-200 flex justify-center items-center gap-2 shadow-2xl'><img className='w-5 h-5' src={gitimg} alt="" />GitHub</a>
             </div>
             <section className='bg-gray-900 p-5 h-120 flex justify-center flex-col items-center gap-5 w-full'>

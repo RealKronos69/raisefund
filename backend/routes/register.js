@@ -15,7 +15,6 @@ router.post('/signup', async (req, res) => {
         return
     }
     const hashedpass = await bcrypt.hash(password, 5)
-    console.log(name, email, password)
     await db.insertOne({ name: name, email: email, password: hashedpass })
     res.status(201).json({ message: 'created!' })
 })
@@ -42,7 +41,7 @@ router.post('/login', async (req, res) => {
         }
     )
     res.cookie("token", token, {
-        httpOnly: true,
+        //httpOnly:true,
         secure: false,
         sameSite: "lax",
         maxAge: 20 * 1000

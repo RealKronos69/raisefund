@@ -10,7 +10,7 @@ function App() {
   
   return (
     <section>
-      <Login/>
+      <Home/>
     </section>
   )
 }
