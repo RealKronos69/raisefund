@@ -2,6 +2,8 @@ import express from 'express'
 import cors from 'cors'
 import Razor from 'razorpay'
 import dotenv from 'dotenv'
+import register from './routes/register.js'
+import cookieParser from 'cookie-parser'
 dotenv.config({
   path: "./backend/.env",
 });
@@ -14,7 +16,13 @@ const razorpay = new Razor({
 })
 
 app.use(express.json())
-app.use(cors())
+app.use(cookieParser());
+app.use(cors({
+    origin: "http://localhost:5173",
+    credentials: true
+}));
+app.use('/user',register)
+
 app.post('/api',async (req,res)=>{
     const {name,message,amount} = req.body
     console.log(name,message,amount)
