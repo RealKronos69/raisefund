@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import gitimg from '../assets/github.png'
 import fundimg from '../assets/fund.png'
+import userimg from '../assets/user.png'
 import Navbar from './navbar'
 
 const Home = () => {
@@ -18,12 +19,33 @@ const Home = () => {
             msg: "Your support, no matter the amount, helps individuals and communities move closer to achieving their goals."
         }
     ]
+
+    const [islogged,setislogged] = useState(false)
+
+    useEffect(()=>{
+        const fetchinfo = async ()=>{
+            const res = await fetch('http://localhost:3000/api',{
+                credentials: "include"
+            })
+            const data = await res.json()
+            console.log(data)
+            if (res.ok) {
+                setislogged(true)
+            }else{
+                setislogged(false)
+            }
+        }
+        fetchinfo()
+    },[])
+
     const [card, setcard] = useState(cardobj)
     return (
         <section className="">
             <div className='p-3 bg-gray-100 flex gap-5'>
-                <a href='/user/signup' className='bg-gray-900 text-white p-3 rounded-3xl text-xs font-semibold hover:scale-101 cursor-pointer pl-5 pr-5 hover:bg-gray-800'>Create Account</a>
+                {islogged===false && <a href='/user/signup' className='bg-gray-900 text-white p-3 rounded-3xl text-xs font-semibold hover:scale-101 cursor-pointer pl-5 pr-5 hover:bg-gray-800'>Create Account</a>}
                 <a href='https://github.com/realkronos69' className='bg-white text-gray-800 p-3 rounded-3xl text-xs font-bold hover:scale-101 cursor-pointer pl-5 pr-5 hover:bg-gray-200 flex justify-center items-center gap-2 shadow-2xl'><img className='w-5 h-5' src={gitimg} alt="" />GitHub</a>
+                <a href='/user/dashboard' className='bg-red-500 p-3 rounded-3xl text-xs font-bold hover:scale-101 cursor-pointer hover:bg-red-300 flex justify-center items-center gap-2 shadow-2xl'><img className='w-5 h-5 invert' src={userimg} alt="" /></a>
+
             </div>
             <section className='bg-gray-900 p-5 h-120 flex justify-center flex-col items-center gap-5 w-full'>
                 <h1 className='text-white font-bold text-3xl max-w-90 text-center'><span className='text-yellow-200'>RaiseFund</span>, A Crowd Funding Website!</h1>

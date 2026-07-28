@@ -54,7 +54,7 @@ const Signup = () => {
                     <input onChange={handleinput} value={formData.confirmpassword} name="confirmpassword" className="border-b-2 border-black p-3 focus:outline-0 w-full" type="text" placeholder="confirm password" min="0" />
                     <span className="flex justify-between">
                         <p className="text-xs">already have a account?</p>
-                        <a className="text-xs text-blue-500" href="">login</a>
+                        <a className="text-xs text-blue-500" href="/user/login">login</a>
                     </span>
                 </div>
                 <button type="submit" className="bg-gray-900 text-white rounded-3xl font-semibold p-3 hover:scale-101 cursor-pointer">Create Account</button>

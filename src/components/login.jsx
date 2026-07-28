@@ -47,7 +47,7 @@ const Login = () => {
                         <input name="password" onChange={handleinput} className="border-b-2 border-black p-3 focus:outline-0 w-full" type="text" placeholder="password" min="0" />
                         <span className="flex justify-between">
                             <p className="text-xs">don't have a account?</p>
-                            <a className="text-xs text-blue-500" href="">signup</a>
+                            <a className="text-xs text-blue-500" href="/user/signup">signup</a>
                         </span>
                     </div>
                     <button type="submit" className="bg-gray-900 text-white rounded-3xl font-semibold p-3 hover:scale-101 cursor-pointer">Login</button>
