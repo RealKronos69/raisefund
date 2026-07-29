@@ -1,0 +1,20 @@
+import { useState, useRef, useEffect } from "react"
+import { NavLink } from "react-router-dom"
+import { Outlet } from "react-router-dom"
+
+
+const Payments = () => {
+    return (
+        <section className="bg-gray-100 h-screen">
+            <div className="flex justify-center fixed w-full z-20">
+                <ul className="flex shadow-md">
+                    <NavLink to="/user/payments/recieved"><li className="bg-blue-500 p-3 w-30 text-sm text-center cursor-pointer text-white font-semibold">Recieved</li></NavLink>
+                    <NavLink to="/user/payments/donated"><li className="bg-white p-3 w-30 text-sm text-center cursor-pointer font-semibold">Donated</li></NavLink>
+                </ul>
+            </div>
+            <Outlet />
+        </section>
+    )
+}
+
+export default Payments

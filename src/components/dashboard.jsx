@@ -2,6 +2,7 @@ import { useRef, useState, useEffect } from "react"
 import msgimg from '../assets/message.png'
 import walletimg from '../assets/wallet.png'
 import donateimg from '../assets/donate.png'
+import donatedimg from '../assets/donated.png'
 import Menu from './menu'
 import { useNavigate } from "react-router-dom"
 const Dashboard = () => {
@@ -9,6 +10,11 @@ const Dashboard = () => {
     const [usercards, setusercards] = useState([])
     const [visible, setvisible] = useState(4)
     const [search, setSearch] = useState("")
+    const [stats, setstats] = useState({
+        raised: 0,
+        donations: 0,
+        donated: 0
+    })
     const navigate = useNavigate()
     useEffect(() => {
         async function fetchcards() {
@@ -39,10 +45,26 @@ const Dashboard = () => {
                 console.log(error)
             }
         }
+        async function userstats() {
+            try {
+                const response = await fetch('http://localhost:3000/user/donation/userstats', {
+                    credentials: 'include'
+                })
+                const data = await response.json()
+                console.log(data)
+                if (response.ok) {
+                    setstats(data)
+                }
+
+            } catch (error) {
+                console.log(error)
+            }
+        }
+        userstats()
         fetchcards()
     }, [])
 
-    
+
 
     const filteredCards = donationcards.filter((card) =>
         card.name.toLowerCase().includes(search.toLowerCase()) ||
@@ -65,7 +87,7 @@ const Dashboard = () => {
                             <div>
                                 <span className="text-sm">
                                     <h1 className="text-gray-400 text-xs">Amount Raised</h1>
-                                    <h1 className="font-bold text-gray-600">10000$</h1>
+                                    <h1 className="font-bold text-gray-600">{stats.raised}</h1>
                                 </span>
                             </div>
                         </div>
@@ -77,7 +99,19 @@ const Dashboard = () => {
                             <div>
                                 <span className="text-sm">
                                     <h1 className="text-gray-400 text-xs">Total Donations</h1>
-                                    <h1 className="font-bold text-gray-600">0</h1>
+                                    <h1 className="font-bold text-gray-600">{stats.donations}</h1>
+                                </span>
+                            </div>
+                        </div>
+                        <button className="w-full h-8 rounded-sm bg-gray-200"></button>
+                    </div>
+                    <div className="shadow-md w-45 h-30 overflow-hidden rounded-2xl p-2 bg-white flex justify-center items-center flex-col gap-3">
+                        <div className="flex gap-3">
+                            <div className="bg-blue-500 w-10 h-10 rounded-md p-2"><img className="w-full h-full invert" src={donatedimg} alt="" /></div>
+                            <div>
+                                <span className="text-sm">
+                                    <h1 className="text-gray-400 text-xs">Amount Donated</h1>
+                                    <h1 className="font-bold text-gray-600">{stats.donated}</h1>
                                 </span>
                             </div>
                         </div>

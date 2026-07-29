@@ -12,16 +12,34 @@ try {
 const schema = new mongoose.Schema({
     name:{
         type:String,
+        required: true,
         trim:true,
     },
     email:{
         type:String,
+        required: true,
         trim:true,
         lowercase: true
     },
     password:{
         type:String,
+        required: true,
         trim:true
+    },
+    totaldonated:{
+        type:Number,
+        trim:true,
+        default:0
+    },
+    totalraised:{
+        type:Number,
+        trim:true,
+        default:0
+    },
+    totaldonations:{
+        type:Number,
+        trim:true,
+        default:0
     },
     createdAt:{
         type:Date,

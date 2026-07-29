@@ -30,6 +30,9 @@ const Login = () => {
             })
             const data = await response.json()
             console.log(data)
+            if (response.ok) {
+                window.location.href="/user/dashboard"
+            }
             if (!response.ok) {
                 throw new Error(data.error || 'something went wrong')
             }

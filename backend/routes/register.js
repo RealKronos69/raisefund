@@ -37,14 +37,14 @@ router.post('/login', async (req, res) => {
         },
         process.env.JWT_SECRET,
         {
-            expiresIn: "20s"
+            expiresIn: "1000s"
         }
     )
     res.cookie("token", token, {
         //httpOnly:true,
         secure: false,
         sameSite: "lax",
-        maxAge: 20 * 1000
+        maxAge: 1000 * 1000
     });
     res.json({ message: 'logged in!', token: token })
 
