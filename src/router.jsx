@@ -7,37 +7,42 @@ import Dashboard from "./components/dashboard"
 import Home from "./components/home"
 import Profile from "./components/profile"
 import Menu from "./components/menu"
+import Form from "./components/donationform"
 
 const router = createBrowserRouter([
     {
-        path:'/',
-        element:<App/>,
-        children:[
+        path: '/',
+        element: <App />,
+        children: [
             {
-                index:true,
-                element:<Home/>
+                index: true,
+                element: <Home />
             },
             {
-                path:'/user/dashboard',
-                element:<><Menu/><Dashboard/></>
+                path: '/user/dashboard',
+                element: <><Menu /><Dashboard /></>
             },
             {
-                path:'/user/profile',
-                element:<><Menu/><Profile/></>
-            }
+                path: '/user/profile',
+                element: <><Menu /><Profile /></>
+            },
+            {
+                path: '/user/donationform',
+                element: <><Menu /><Form /></>
+            },
         ]
     },
     {
-        path:'/user/login',
-        element:<Login/>
+        path: '/user/login',
+        element: <Login />
     },
     {
-        path:'/user/signup',
-        element:<Signup/>
+        path: '/user/signup',
+        element: <Signup />
     },
     {
-        path:'/api/payment',
-        element:<Pay/>
+        path: '/api/payment/:id',
+        element: <Pay />
     }
 ])
 

@@ -1,25 +1,29 @@
 import { useState, useEffect, useRef } from "react"
+import { useParams } from "react-router-dom"
 
 
 function Pay() {
   const nm = useRef()
   const msg = useRef()
   const amt = useRef()
+  const params = useParams()
+
   const fetchdata = async (NAME, MESSAGE, AMOUNT) => {
     if (NAME === "" || MESSAGE === "" || AMOUNT === "") {
       console.log('empty')
       return
     }
-    if (AMOUNT<10 || AMOUNT>10000) {
+    if (AMOUNT < 10 || AMOUNT > 10000) {
       console.log('invalid amount')
       return
     }
-    const response = await fetch('http://localhost:3000/api', {
+    const response = await fetch('http://localhost:3000/create-order', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
+        donateid: params.id,
         name: NAME,
         message: MESSAGE,
         amount: AMOUNT
@@ -27,6 +31,7 @@ function Pay() {
     })
     const data = await response.json()
     console.log(data)
+    const paidamount = AMOUNT
     const options = {
       key: "rzp_test_THkOfi3Dh6ISK8",
       amount: data.amount,
@@ -34,14 +39,25 @@ function Pay() {
       order_id: data.id,
       name: "RaiseFund",
       description: "Donation",
+      callback_url: "http://localhost:5173/user/payments",
+      redirect: true,
 
-      handler: function (response) {
-        alert("Payment Successful");
-        console.log(response);
+      handler: async function (response) {
+        await fetch("http://localhost:3000/verify-payment", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            donateid:params.id,
+            amount:paidamount,
+            ...response
+          })
+        });
       },
 
       prefill: {
-        name: NAME,
+        name: "",
         email: "john@example.com",
         contact: "9999999999",
       },
@@ -68,11 +84,11 @@ function Pay() {
           <textarea ref={msg} className="bg-gray-200 w-full h-20 p-3 focus:outline-0" name="message" rows="4" cols="50" placeholder=""></textarea>
         </div>
         <div className="flex gap-2 flex-wrap">
-          <button onClick={(e)=>{amt.current.value=e.target.textContent}} className="p-3 text-xs bg-gray-800 font-semibold font-mono text-amber-50 rounded-2xl cursor-pointer">10</button>
-          <button onClick={(e)=>{amt.current.value=e.target.textContent}} className="p-3 text-xs bg-gray-800 font-semibold font-mono text-amber-50 rounded-2xl cursor-pointer">50</button>
-          <button onClick={(e)=>{amt.current.value=e.target.textContent}} className="p-3 text-xs bg-gray-800 font-semibold font-mono text-amber-50 rounded-2xl cursor-pointer">100</button>
-          <button onClick={(e)=>{amt.current.value=e.target.textContent}} className="p-3 text-xs bg-gray-800 font-semibold font-mono text-amber-50 rounded-2xl cursor-pointer">500</button>
-          <button onClick={(e)=>{amt.current.value=e.target.textContent}} className="p-3 text-xs bg-gray-800 font-semibold font-mono text-amber-50 rounded-2xl cursor-pointer">1000</button>
+          <button onClick={(e) => { amt.current.value = e.target.textContent }} className="p-3 text-xs bg-gray-800 font-semibold font-mono text-amber-50 rounded-2xl cursor-pointer">10</button>
+          <button onClick={(e) => { amt.current.value = e.target.textContent }} className="p-3 text-xs bg-gray-800 font-semibold font-mono text-amber-50 rounded-2xl cursor-pointer">50</button>
+          <button onClick={(e) => { amt.current.value = e.target.textContent }} className="p-3 text-xs bg-gray-800 font-semibold font-mono text-amber-50 rounded-2xl cursor-pointer">100</button>
+          <button onClick={(e) => { amt.current.value = e.target.textContent }} className="p-3 text-xs bg-gray-800 font-semibold font-mono text-amber-50 rounded-2xl cursor-pointer">500</button>
+          <button onClick={(e) => { amt.current.value = e.target.textContent }} className="p-3 text-xs bg-gray-800 font-semibold font-mono text-amber-50 rounded-2xl cursor-pointer">1000</button>
         </div>
         <div>
           <h1 className="text-gray-700 font-semibold font-mono pl-1">amount</h1>

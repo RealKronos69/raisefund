@@ -1,5 +1,5 @@
 import express from 'express'
-import db from '../schema.js'
+import db from '../userschema.js'
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
 import dotenv from 'dotenv'

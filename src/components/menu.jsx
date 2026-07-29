@@ -18,7 +18,7 @@ const Menu = () => {
         setisopen(!isopen)
     }
     return (
-        <div ref={menu} className="fixed top-0 w-50 ease-in-out duration-100 -translate-x-38 rounded-r-3xl bg-gray-950 h-fit">
+        <div ref={menu} className="fixed top-0 w-50 ease-in-out duration-100 -translate-x-38 rounded-r-3xl bg-gray-950 h-fit z-40">
             <div className=" justify-between flex p-2 items-center">
                 <h1 className="text-white pl-3 font-mono font-bold"></h1>
                 <button className="bg-white w-8 h-8 p-1 rounded-3xl text-black font-bold cursor-pointer flex justify-center items-center" onClick={handlemenu}>

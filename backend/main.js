@@ -3,8 +3,11 @@ import cors from 'cors'
 import Razor from 'razorpay'
 import dotenv from 'dotenv'
 import register from './routes/register.js'
+import dform from './routes/donation.js'
 import cookieParser from 'cookie-parser'
 import jwt from 'jsonwebtoken'
+import donatedb from './donationschema.js'
+import crypto from 'crypto'
 dotenv.config({
   path: "./backend/.env",
 });
@@ -23,6 +26,7 @@ app.use(cors({
   credentials: true
 }));
 app.use('/user', register)
+app.use('/user/donation', dform)
 
 app.get('/api', (req, res) => {
   const token = req.cookies.token
@@ -44,9 +48,8 @@ app.get('/api', (req, res) => {
   }
 })
 
-app.post('/api', async (req, res) => {
-  const { name, message, amount } = req.body
-  console.log(name, message, amount)
+app.post('/create-order', async (req, res) => {
+  const { donateid, name, message, amount } = req.body
   const options = {
     amount: Number(amount) * 100, // ₹500 => 50000 paise
     currency: "INR",
@@ -54,6 +57,41 @@ app.post('/api', async (req, res) => {
   };
   const order = await razorpay.orders.create(options)
   res.json(order)
+})
+
+app.post('/verify-payment', async (req, res) => {
+  console.log(req.body)
+  const {
+    donateid,
+    amount,
+    razorpay_order_id,
+    razorpay_payment_id,
+    razorpay_signature
+  } = req.body;
+
+  try {
+    const generatedSignature = crypto
+      .createHmac("sha256", process.env.KEY_SECRET)
+      .update(razorpay_order_id + "|" + razorpay_payment_id)
+      .digest("hex")
+
+    if (generatedSignature !== razorpay_signature) {
+      return res.json({ message: 'payment verification failed!', status: false })
+    }
+
+    await donatedb.findOneAndUpdate({ _id: donateid }, {
+      $inc: {
+        raised: amount
+      }
+    })
+    res.json({ message: 'successfull payment!', status: true })
+  } catch (err) {
+    res.status(500).json({
+      message: "Internal server error",
+      status: false
+    })
+  }
+
 })
 
 app.listen(3000)

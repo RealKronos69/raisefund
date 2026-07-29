@@ -17,10 +17,21 @@ const schema = new mongoose.Schema({
     email:{
         type:String,
         trim:true,
-        unique:true,
         lowercase: true
     },
-    password:{
+    phone:{
+        type:String,
+        trim:true
+    },
+    amount:{
+        type:Number,
+        trim:true
+    },
+    raised:{
+        type:Number,
+        trim:true
+    },
+    cause:{
         type:String,
         trim:true
     },
@@ -31,6 +42,6 @@ const schema = new mongoose.Schema({
 
 })
 
-const db = mongoose.model('userinfo',schema)
+const donation = mongoose.model('donations',schema)
 
-export default db
+export default donation
