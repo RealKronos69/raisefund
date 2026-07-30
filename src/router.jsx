@@ -36,14 +36,18 @@ const router = createBrowserRouter([
             {
                 path: '/user/payments',
                 element: <><Menu /><Payments /></>,
-                children:[
+                children: [
                     {
-                        path:'recieved',
-                        element:<><Menu /><Recieved /></>,
+                        index: true,
+                        element: <><Recieved /></>,
                     },
                     {
-                        path:'Donated',
-                        element:<><Menu /><Donated /></>,
+                        path: 'recieved',
+                        element: <><Recieved /></>,
+                    },
+                    {
+                        path: 'Donated',
+                        element: <><Donated /></>,
                     },
 
                 ]

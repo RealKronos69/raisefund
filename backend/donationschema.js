@@ -10,6 +10,10 @@ try {
 }
 
 const schema = new mongoose.Schema({
+    userid:{
+        type:String,
+        trim:true,
+    },
     name:{
         type:String,
         trim:true,

@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react"
 import { useParams } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 
 
 function Pay() {
@@ -7,6 +8,7 @@ function Pay() {
   const msg = useRef()
   const amt = useRef()
   const params = useParams()
+  const navigate = useNavigate()
 
   const fetchdata = async (NAME, MESSAGE, AMOUNT) => {
     if (NAME === "" || MESSAGE === "" || AMOUNT === "") {
@@ -24,14 +26,11 @@ function Pay() {
       },
       body: JSON.stringify({
         donateid: params.id,
-        name: NAME,
-        message: MESSAGE,
         amount: AMOUNT
       })
     })
     const data = await response.json()
     console.log(data)
-    const paidamount = AMOUNT
     const options = {
       key: "rzp_test_THkOfi3Dh6ISK8",
       amount: data.amount,
@@ -51,7 +50,8 @@ function Pay() {
           },
           body: JSON.stringify({
             donateid: params.id,
-            amount: paidamount,
+            message:MESSAGE,
+            amount:AMOUNT,
             ...response
           })
         });

@@ -8,7 +8,9 @@ import cookieParser from 'cookie-parser'
 import jwt from 'jsonwebtoken'
 import donatedb from './donationschema.js'
 import userdb from './userschema.js'
+import paymentdb from './paymentschema.js'
 import crypto from 'crypto'
+import auth from './middleware/auth.js'
 dotenv.config({
   path: "./backend/.env",
 });
@@ -49,8 +51,22 @@ app.get('/api', (req, res) => {
   }
 })
 
+app.get('/api/getuser',auth,async (req,res)=>{
+  try {
+    // const token = req.cookies.token
+    // if (!token) {
+    //   return res.status(401).json({message:'token not found'})
+    // }
+    // const decoded = jwt.verify(token,process.env.JWT_SECRET)
+    const user = await userdb.findOne({_id:req.user.id}).select("name email")
+    res.status(200).json(user)
+  } catch (error) {
+    res.status(500).json({message:'error'})
+  }
+})
+
 app.post('/create-order', async (req, res) => {
-  const { donateid, name, message, amount } = req.body
+  const { donateid, amount } = req.body
   const options = {
     amount: Number(amount) * 100, // ₹500 => 50000 paise
     currency: "INR",
@@ -61,10 +77,10 @@ app.post('/create-order', async (req, res) => {
 })
 
 app.post('/verify-payment', async (req, res) => {
-  console.log(req.body)
   try {
     const {
       donateid,
+      message,
       amount,
       razorpay_order_id,
       razorpay_payment_id,
@@ -94,12 +110,18 @@ app.post('/verify-payment', async (req, res) => {
         raised: amount
       }
     })
+    await userdb.findOneAndUpdate({ _id: donateid }, {
+      $inc: {
+        totalraised: amount
+      }
+    })
     await userdb.findOneAndUpdate({ _id: decoded.id }, {
       $inc: {
         totaldonated: amount,
         totaldonations: 1
       },
     })
+    await paymentdb.insertOne({donator:decoded.id,reciever:donateid,amount:amount,orderID:razorpay_order_id,message:message})
     res.json({ message: 'successfull payment!', status: true })
 
   } catch (error) {

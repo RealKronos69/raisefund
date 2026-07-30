@@ -7,6 +7,7 @@ import dashimg from "../assets/dashboard.png"
 import walletimg from "../assets/wallet.png"
 import logoutimg from "../assets/logout.png"
 import { NavLink } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 
 const Menu = () => {
     const menu = useRef()
@@ -16,6 +17,22 @@ const Menu = () => {
         menu.current.classList.toggle("-translate-x-38")
         menucontent.current.classList.toggle("hidden")
         setisopen(!isopen)
+    }
+    const navigate = useNavigate()
+    const handleLogout = async()=>{
+        try {
+            const res = await fetch('http://localhost:3000/user/logout',{
+                method:'POST',
+                credentials:"include"
+            })
+            const data = await res.json()
+            console.log(data)
+            if (res.ok) {
+                navigate('/user/login')
+            }
+        } catch (error) {
+            console.log(error)
+        }
     }
     return (
         <div ref={menu} className="fixed top-0 w-50 ease-in-out duration-100 -translate-x-38 rounded-r-3xl bg-gray-950 h-fit z-40">
@@ -32,7 +49,7 @@ const Menu = () => {
                         <NavLink to="/user/profile"><li className="w-full p-3 rounded-3xl flex justify-center items-center gap-4"><img src={userimg} className="w-4 h-4 invert" />Profile</li></NavLink>
                         <NavLink to="/user/dashboard"><li className="w-full p-3 rounded-3xl flex justify-center items-center gap-4"><img src={dashimg} className="w-4 h-4 invert" />Dashboard</li></NavLink>
                         <NavLink to="/user/payments"><li className="w-full p-3 rounded-3xl flex justify-center items-center gap-4"><img src={walletimg} className="w-4 h-4 invert" />Payments</li></NavLink>
-                        <NavLink to="/user/logout"><li className="w-full p-3 rounded-3xl flex justify-center items-center gap-4"><img src={logoutimg} className="w-4 h-4 invert" />Logout</li></NavLink>
+                        <li onClick={()=>{handleLogout()}} className="w-full p-3 rounded-3xl flex justify-center items-center gap-4"><img src={logoutimg} className="w-4 h-4 invert" />Logout</li>
                     </ul>
                 </div>
             </div>

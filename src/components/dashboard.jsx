@@ -17,11 +17,10 @@ const Dashboard = () => {
     })
     const navigate = useNavigate()
     useEffect(() => {
-        async function fetchcards() {
+        async function fetchdonationcards() {
             try {
-                const response = await fetch('http://localhost:3000/user/donation')
+                const response = await fetch('http://localhost:3000/user/donation/otherfunds')
                 const data = await response.json()
-                console.log(data)
                 if (response.ok) {
                     setdonationcards(data)
                 }
@@ -30,13 +29,12 @@ const Dashboard = () => {
                 console.log(error)
             }
         }
-        async function usercards() {
+        async function fetchusercards() {
             try {
                 const response = await fetch('http://localhost:3000/user/donation/userfunds', {
                     credentials: 'include'
                 })
                 const data = await response.json()
-                console.log(data)
                 if (response.ok) {
                     setusercards(data)
                 }
@@ -51,9 +49,11 @@ const Dashboard = () => {
                     credentials: 'include'
                 })
                 const data = await response.json()
-                console.log(data)
                 if (response.ok) {
                     setstats(data)
+                }
+                if (response.status === 401) {
+                    navigate('/user/login')
                 }
 
             } catch (error) {
@@ -61,10 +61,23 @@ const Dashboard = () => {
             }
         }
         userstats()
-        fetchcards()
+        fetchusercards()
+        fetchdonationcards()
     }, [])
 
-
+    const handleDelete = async (ID) => {
+        try {
+            const res = await fetch(`http://localhost:3000/user/donation/delete/${ID}`, {
+                method: 'DELETE',
+                credentials: 'include'
+            })
+            setusercards(prev =>
+                prev.filter(card => card._id !== ID)
+            );
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
     const filteredCards = donationcards.filter((card) =>
         card.name.toLowerCase().includes(search.toLowerCase()) ||
@@ -125,21 +138,25 @@ const Dashboard = () => {
 
                         <div className="flex justify-center items-center w-full h-full flex-col">
                             <h1 className="text-xs text-gray-400">Your Active Campaigns</h1>
-                            <h1 className="font-bold text-gray-700 text-lg">0</h1>
+                            <h1 className="font-bold text-gray-700 text-lg">{usercards.length}</h1>
                         </div>
                     </div>
                     {/* box */}
-                    <div className="shadow-md w-70 h-60 rounded-2xl p-3 flex flex-col gap-5 justify-between bg-white">
-                        <div className="flex flex-col gap-5">
-                            <div className="p-3 bg-gray-200 rounded-3xl text-sm font-bold">ID:102039</div>
-                        </div>
-                        <div className="flex gap-1">
-                            <h1 className="font-semibold">raised amount:</h1>
-                            <div>1000/10000</div>
-                        </div>
-                        <p className="w-full overflow-y-auto wrap-break-word p-2">####</p>
-                        <button className="bg-gray-900 text-white cursor-pointer hover:scale-101 rounded-3xl w-full p-3">remove</button>
-                    </div>
+                    {usercards.map((e) => {
+                        return (
+                            <div key={e._id} className="shadow-md w-70 h-60 rounded-2xl p-3 flex flex-col gap-5 justify-between bg-white">
+                                <div className="flex flex-col gap-5">
+                                    <div className="p-3 bg-gray-200 rounded-3xl text-sm font-bold">ID:102039</div>
+                                </div>
+                                <div className="flex gap-1">
+                                    <h1 className="font-semibold">raised amount:</h1>
+                                    <div>{e.raised}/{e.amount}</div>
+                                </div>
+                                <p className="w-full overflow-y-auto wrap-break-word p-2">{e.cause}</p>
+                                <button onClick={() => { handleDelete(e._id) }} className="bg-gray-900 text-white cursor-pointer hover:scale-101 rounded-3xl w-full p-3">remove</button>
+                            </div>
+                        )
+                    })}
 
                 </div>
                 <h1 className="h-2 bg-gray-200"></h1>
@@ -156,7 +173,7 @@ const Dashboard = () => {
                                     <div className="text-gray-800 font-bold">{e.raised}/{e.amount}</div>
                                 </div>
                                 <p className="p-2 w-full overflow-y-auto wrap-break-word">{e.cause}</p>
-                                <button onClick={() => { navigate(`/api/payment/${e._id}`) }} className="bg-gray-900 text-white cursor-pointer hover:scale-101 rounded-3xl w-full p-3">donate</button>
+                                <button onClick={() => { navigate(`/api/payment/${e.userid}`) }} className="bg-gray-900 text-white cursor-pointer hover:scale-101 rounded-3xl w-full p-3">donate</button>
                             </div>
                         )
                     })}
