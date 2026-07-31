@@ -11,6 +11,7 @@ import Form from "./components/donationform"
 import Payments from "./components/payments"
 import Donated from "./components/paydonated"
 import Recieved from "./components/payrecieved"
+import WithdrawInfo from "./components/withdraw";
 
 const router = createBrowserRouter([
     {
@@ -48,6 +49,10 @@ const router = createBrowserRouter([
                     {
                         path: 'Donated',
                         element: <><Donated /></>,
+                    },
+                    {
+                        path: 'withdraw',
+                        element: <><WithdrawInfo /></>,
                     },
 
                 ]

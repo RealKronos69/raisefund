@@ -84,15 +84,15 @@ const Form = () => {
                 <form onSubmit={handleSubmit} className="flex flex-col gap-3">
                     <div>
                         <h1 className="text-sm font-semibold text-gray-700">Full Name:</h1>
-                        <input readOnly value={detail.name} onChange={handleInput} name="name" className="bg-gray-100 w-full p-3 focus:outline-0 rounded-md border-b-2" type="text" />
+                        <input readOnly value={detail.name} onChange={handleInput} name="name" className="bg-gray-100 w-full p-3 focus:outline-0 rounded-md" type="text" />
                     </div>
                     <div>
                         <h1 className="text-sm font-semibold text-gray-700">email:</h1>
-                        <input readOnly value={detail.email} onChange={handleInput} name="email" className="bg-gray-100 w-full p-3 focus:outline-0 rounded-md border-b-2" type="email" />
+                        <input readOnly value={detail.email} onChange={handleInput} name="email" className="bg-gray-100 w-full p-3 focus:outline-0 rounded-md" type="email" />
                     </div>
                     <div>
                         <h1 className="text-sm font-semibold text-gray-700">phone number:</h1>
-                        <input value={detail.phone} onChange={handleInput} name="phone" className="bg-gray-100 w-full p-3 focus:outline-0 rounded-md border-b-2" type="text" />
+                        <input value={detail.phone} onChange={handleInput} name="phone" className="bg-gray-100 w-full p-3 focus:outline-0 rounded-md" type="text" />
                     </div>
                     <div>
                         <h1 className="text-sm font-semibold text-gray-700">amount:</h1>
@@ -101,7 +101,7 @@ const Form = () => {
                     </div>
                     <div>
                         <h1 className="text-sm font-semibold text-gray-700">cause:</h1>
-                        <textarea value={detail.cause} onChange={handleInput} name="cause" className="bg-gray-100 w-full p-3 focus:outline-0 rounded-md text-xs border-b-2" type="text" />
+                        <textarea value={detail.cause} onChange={handleInput} name="cause" className="bg-gray-100 w-full p-3 focus:outline-0 rounded-md text-xs" type="text" />
                     </div>
                     <button type="submit" className="bg-gray-900 text-white font-semibold p-4 w-full rounded-md hover:scale-101 cursor-pointer">Submit</button>
                 </form>

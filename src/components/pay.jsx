@@ -21,6 +21,7 @@ function Pay() {
     }
     const response = await fetch('http://localhost:3000/create-order', {
       method: 'POST',
+      credentials: "include",
       headers: {
         'Content-Type': 'application/json'
       },
@@ -30,7 +31,11 @@ function Pay() {
       })
     })
     const data = await response.json()
-    console.log(data)
+    // console.log(response.status)
+    if (response.status === 401) {
+      navigate('/user/login')
+      return
+    }
     const options = {
       key: "rzp_test_THkOfi3Dh6ISK8",
       amount: data.amount,
@@ -50,14 +55,19 @@ function Pay() {
           },
           body: JSON.stringify({
             donateid: params.id,
-            message:MESSAGE,
-            amount:AMOUNT,
+            message: MESSAGE,
+            amount: AMOUNT,
             ...response
           })
         });
         const data = await res.json()
+        if (res.status === 401) {
+          navigate('/user/login')
+          return
+        }
         if (data.status) {
-          navigate("/user/payments");
+          navigate("/user/payments")
+          return 
         }
       },
 

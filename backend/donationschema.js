@@ -1,5 +1,6 @@
 import mongoose from 'mongoose'
 import dotenv from 'dotenv'
+import crypto from "crypto"
 dotenv.config({ path: "./backend/.env" })
 
 try {
@@ -10,42 +11,52 @@ try {
 }
 
 const schema = new mongoose.Schema({
-    userid:{
-        type:String,
-        trim:true,
+    userid: {
+        type: String,
+        trim: true,
     },
-    name:{
-        type:String,
-        trim:true,
+    campaignId: {
+        type: String,
+        trim: true,
+        default: () => crypto.randomBytes(10).toString("hex"),
     },
-    email:{
-        type:String,
-        trim:true,
+    name: {
+        type: String,
+        trim: true,
+    },
+    email: {
+        type: String,
+        trim: true,
         lowercase: true
     },
-    phone:{
-        type:String,
-        trim:true
+    phone: {
+        type: String,
+        trim: true
     },
-    amount:{
-        type:Number,
-        trim:true
+    amount: {
+        type: Number,
+        trim: true
     },
-    raised:{
-        type:Number,
-        trim:true
+    raised: {
+        type: Number,
+        trim: true
     },
-    cause:{
-        type:String,
-        trim:true
+    cause: {
+        type: String,
+        trim: true
     },
-    createdAt:{
-        type:Date,
-        default:Date.now
+    status: {
+        type: String,
+        enum: ["active", "pending", "withdrawn"],
+        default: "active",
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now
     }
 
 })
 
-const donation = mongoose.model('donations',schema)
+const donation = mongoose.model('donations', schema)
 
 export default donation

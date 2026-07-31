@@ -9,8 +9,10 @@ import jwt from 'jsonwebtoken'
 import donatedb from './donationschema.js'
 import userdb from './userschema.js'
 import paymentdb from './paymentschema.js'
+import withdrawdb from './withdrawschema.js'
 import crypto from 'crypto'
 import auth from './middleware/auth.js'
+import donation from './donationschema.js'
 dotenv.config({
   path: "./backend/.env",
 });
@@ -32,11 +34,12 @@ app.use('/user', register)
 app.use('/user/donation', dform)
 
 app.get('/api', (req, res) => {
-  const token = req.cookies.token
-  if (!token) {
-    return res.status(401).json({ loggedIn: false })
-  }
+
   try {
+    const token = req.cookies.token
+    if (!token) {
+      return res.status(401).json({ loggedIn: false })
+    }
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
     res.status(200).json({
@@ -51,32 +54,36 @@ app.get('/api', (req, res) => {
   }
 })
 
-app.get('/api/getuser',auth,async (req,res)=>{
+app.get('/api/getuser', auth, async (req, res) => {
   try {
     // const token = req.cookies.token
     // if (!token) {
     //   return res.status(401).json({message:'token not found'})
     // }
     // const decoded = jwt.verify(token,process.env.JWT_SECRET)
-    const user = await userdb.findOne({_id:req.user.id}).select("name email")
+    const user = await userdb.findOne({ _id: req.user.id }).select("name email")
     res.status(200).json(user)
   } catch (error) {
-    res.status(500).json({message:'error'})
+    res.status(500).json({ message: 'error' })
   }
 })
 
-app.post('/create-order', async (req, res) => {
-  const { donateid, amount } = req.body
-  const options = {
-    amount: Number(amount) * 100, // ₹500 => 50000 paise
-    currency: "INR",
-    receipt: `receipt_${Date.now()}`,
-  };
-  const order = await razorpay.orders.create(options)
-  res.json(order)
+app.post('/create-order', auth, async (req, res) => {
+  try {
+    const { donateid, amount } = req.body
+    const options = {
+      amount: Number(amount) * 100, // ₹500 => 50000 paise
+      currency: "INR",
+      receipt: `receipt_${Date.now()}`,
+    };
+    const order = await razorpay.orders.create(options)
+    res.status(201).json(order)
+  } catch (error) {
+    res.status(500).json({message:'something went wrong'})
+  }
 })
 
-app.post('/verify-payment', async (req, res) => {
+app.post('/verify-payment',auth, async (req, res) => {
   try {
     const {
       donateid,
@@ -105,7 +112,7 @@ app.post('/verify-payment', async (req, res) => {
       return res.json({ message: 'payment verification failed!', status: false })
     }
 
-    await donatedb.findOneAndUpdate({ _id: donateid }, {
+    await donatedb.findOneAndUpdate({ userid: donateid }, {
       $inc: {
         raised: amount
       }
@@ -121,7 +128,7 @@ app.post('/verify-payment', async (req, res) => {
         totaldonations: 1
       },
     })
-    await paymentdb.insertOne({donator:decoded.id,reciever:donateid,amount:amount,orderID:razorpay_order_id,message:message})
+    await paymentdb.insertOne({ donator: decoded.id, reciever: donateid, amount: amount, orderID: razorpay_order_id, message: message })
     res.json({ message: 'successfull payment!', status: true })
 
   } catch (error) {
@@ -131,6 +138,30 @@ app.post('/verify-payment', async (req, res) => {
     })
   }
 
+})
+
+app.post('/withdraw', auth, async (req, res) => {
+  try {
+    const campaign = await donatedb.findOneAndUpdate(
+      {
+        campaignId: req.body.campaignId,
+        userid: req.user.id
+      },
+      {
+        status: "pending"
+      }
+    )
+    if (!campaign) {
+      return res.status(404).json({
+        message: "Campaign not found"
+      })
+    }
+    await withdrawdb.insertOne(req.body)
+    res.status(201).json({ message: 'withdrawal request submitted!' })
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({ message: 'withdrawal request failed!' })
+  }
 })
 
 app.listen(3000)

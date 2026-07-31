@@ -4,6 +4,7 @@ import userdb from '../userschema.js'
 import express from 'express'
 import jwt from 'jsonwebtoken'
 import auth from '../middleware/auth.js'
+import withdrawdb from '../withdrawschema.js'
 const router = express.Router()
 
 router.post('/',auth, async (req, res) => {
@@ -15,14 +16,14 @@ router.get('/otherfunds', async (req, res) => {
     const cards = await donationdb.find()
     res.json(cards)
 })
-router.get('/userfunds', async (req, res) => {
+router.get('/userfunds',auth, async (req, res) => {
     try {
-        const token = req.cookies.token
-        if (!token) {
-            return res.status(401).json({ message: 'token not found' })
-        }
-        const decoded = jwt.verify(token, process.env.JWT_SECRET)
-        const cards = await donationdb.find({ email: decoded.email })
+        // const token = req.cookies.token
+        // if (!token) {
+        //     return res.status(401).json({ message: 'token not found' })
+        // }
+        // const decoded = jwt.verify(token, process.env.JWT_SECRET)
+        const cards = await donationdb.find({ email: req.user.email })
         res.json(cards)
     } catch (error) {
 
@@ -42,16 +43,16 @@ router.delete('/delete/:id', async (req, res) => {
 })
 
 
-router.get('/userstats', async (req, res) => {
+router.get('/userstats',auth, async (req, res) => {
     try {
-        const token = req.cookies.token
-        if (!token) {
-            return res.status(401).json({
-                message: 'token not found'
-            })
-        }
-        const decoded = jwt.verify(token, process.env.JWT_SECRET)
-        const user = await userdb.findOne({ _id: decoded.id })
+        // const token = req.cookies.token
+        // if (!token) {
+        //     return res.status(401).json({
+        //         message: 'token not found'
+        //     })
+        // }
+        // const decoded = jwt.verify(token, process.env.JWT_SECRET)
+        const user = await userdb.findById(req.user.id)
 
         res.json({
             donated: user.totaldonated,
@@ -86,6 +87,16 @@ router.get('/recievedinfo', auth, async (req, res) => {
         const donationinfo = await paymentdb.find({ reciever: req.user.id })
         // {id:donationinfo._id,amount:donationinfo.amount,message:donationinfo.message}
         res.status(200).json(donationinfo)
+    } catch (err) {
+        res.status(500).json({ message: 'some error occured', status: false })
+    }
+})
+
+router.get('/withdrawinfo', auth, async (req, res) => {
+    try {
+        const withdrawinfo = await withdrawdb.find({ userid: req.user.id })
+        // {id:donationinfo._id,amount:donationinfo.amount,message:donationinfo.message}
+        res.status(200).json(withdrawinfo)
     } catch (err) {
         res.status(500).json({ message: 'some error occured', status: false })
     }
