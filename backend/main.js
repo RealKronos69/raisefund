@@ -12,7 +12,7 @@ import paymentdb from './paymentschema.js'
 import withdrawdb from './withdrawschema.js'
 import crypto from 'crypto'
 import auth from './middleware/auth.js'
-import donation from './donationschema.js'
+import explore from './routes/explore.js'
 dotenv.config({
   path: "./backend/.env",
 });
@@ -32,6 +32,7 @@ app.use(cors({
 }));
 app.use('/user', register)
 app.use('/user/donation', dform)
+app.use('/explore', explore)
 
 app.get('/api', (req, res) => {
 

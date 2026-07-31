@@ -12,14 +12,12 @@ try {
 
 const schema = mongoose.Schema({
     donator:{
-        type:String,
-        required: true,
-        trim:true
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "userinfo"
     },
     reciever:{
-        type:String,
-        trim:true,
-        required: true
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "userinfo"
     },
     amount:{
         type:Number,

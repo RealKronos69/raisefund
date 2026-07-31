@@ -10,6 +10,7 @@ import Menu from "./components/menu"
 import Form from "./components/donationform"
 import Payments from "./components/payments"
 import Donated from "./components/paydonated"
+import Navbar from "./components/navbar"
 import Recieved from "./components/payrecieved"
 import WithdrawInfo from "./components/withdraw";
 
@@ -20,7 +21,7 @@ const router = createBrowserRouter([
         children: [
             {
                 index: true,
-                element: <Home />
+                element: <><Navbar /><Home /></>
             },
             {
                 path: '/user/dashboard',

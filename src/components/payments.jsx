@@ -5,7 +5,7 @@ import { Outlet } from "react-router-dom"
 
 const Payments = () => {
     return (
-        <section className="bg-white h-screen">
+        <section className="bg-gray-100 h-screen">
             <div className="flex justify-center fixed w-full z-20">
                 <ul className="flex shadow-md">
                     <NavLink to="/user/payments/recieved"><li className="bg-blue-600 p-3 w-30 text-sm text-center cursor-pointer text-white font-semibold">Recieved</li></NavLink>

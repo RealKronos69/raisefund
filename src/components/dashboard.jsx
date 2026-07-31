@@ -1,4 +1,5 @@
 import { useRef, useState, useEffect } from "react"
+import { useLocation } from "react-router-dom"
 import msgimg from '../assets/message.png'
 import walletimg from '../assets/wallet.png'
 import donateimg from '../assets/donate.png'
@@ -6,6 +7,7 @@ import donatedimg from '../assets/donated.png'
 import searchimg from '../assets/search.png'
 import heartimg from '../assets/heart.png'
 import Menu from './menu'
+import Navbar from './navbar'
 import { useNavigate } from "react-router-dom"
 const Dashboard = () => {
     const [donationcards, setdonationcards] = useState([])
@@ -19,6 +21,8 @@ const Dashboard = () => {
     })
     const [ActiveMessage, SetActiveMessage] = useState(false)
     const navigate = useNavigate()
+    const location = useLocation()
+
     useEffect(() => {
         async function fetchdonationcards() {
             try {
@@ -68,6 +72,15 @@ const Dashboard = () => {
         fetchdonationcards()
     }, [])
 
+    useEffect(() => {
+        if (location.hash) {
+            setTimeout(() => {
+                document.querySelector(location.hash)?.scrollIntoView({ behavior: "smooth" });
+            }, 100)
+        }
+        window.history.replaceState(null, "", window.location.pathname)
+    }, [location])
+
     const handleDelete = async (ID) => {
         try {
             const res = await fetch(`http://localhost:3000/user/donation/delete/${ID}`, {
@@ -114,8 +127,9 @@ const Dashboard = () => {
 
     return (
         <section className="h-screen bg-white">
-            <div className="bg-gray-900 h-12 flex items-center justify-end p-3 gap-5 w-full z-20">
-                <button className="cursor-pointer"><img className="w-8 h-8" src={msgimg} alt="" /></button>
+            <Navbar />
+            <div className="bg-gray-900 h-24 flex items-center justify-end p-3 gap-5 w-full z-20">
+
             </div>
             <section>
                 <div className="bg-gray-100 p-5 flex flex-wrap gap-5">
@@ -170,7 +184,7 @@ const Dashboard = () => {
                         <a className="text-gray-900 p-3 rounded-3xl text-sm bg-white flex items-center gap-3 justify-center font-semibold shadow-md hover:bg-gray-300" href="/user/donationform"><img className="w-4 h-4" src={heartimg} />Create Campaign</a>
 
                     </div>
-                    {/* box */}
+
                     {usercards.filter((e) => e.status !== "pending" && e.status !== "withdrawn").map((e) => {
                         // if (e.status === "withdraw_pending" || e.status === "withdrawn" ) {
                         //     return
@@ -207,7 +221,7 @@ const Dashboard = () => {
 
                 </div>
                 <h1 className="h-2 bg-gray-200"></h1>
-                <div className="p-2 bg-gray-200 ">
+                <div id="DONATIONS" className="p-2 bg-gray-200 ">
                     <div className="flex justify-center items-center">
                         <div className="bg-white w-10 h-10 p-3 rounded-l-3xl"><img className="w-full h-full" src={searchimg} alt="" /></div>
                         <input value={search} onChange={(e) => { setSearch(e.target.value) }} className="bg-white p-2 focus:outline-0 h-10 text-xs w-50 rounded-r-3xl" type="search" />
@@ -216,7 +230,7 @@ const Dashboard = () => {
                 <div className="bg-white flex flex-wrap gap-5 items-center justify-center p-5">
 
                     {filteredCards.slice(0, visible).map((e) => {
-                        if ((e.raised >= e.amount) || (e.status==="pending")) {
+                        if ((e.raised >= e.amount) || (e.status === "pending")) {
                             return null
                         }
                         return (

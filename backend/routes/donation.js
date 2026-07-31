@@ -74,8 +74,9 @@ router.get('/donatedinfo', auth, async (req, res) => {
         //     })
         // }
         // const decoded = jwt.verify(token, process.env.JWT_SECRET)
-        const donationinfo = await paymentdb.find({ donator: req.user.id })
+        const donationinfo = await paymentdb.find({ donator: req.user.id }).populate("reciever","name")
         // {id:donationinfo._id,amount:donationinfo.amount,message:donationinfo.message}
+        // console.log(donationinfo)
         res.status(200).json(donationinfo)
     } catch (err) {
         res.status(500).json({ message: 'some error occured', status: false })
@@ -84,7 +85,7 @@ router.get('/donatedinfo', auth, async (req, res) => {
 
 router.get('/recievedinfo', auth, async (req, res) => {
     try {
-        const donationinfo = await paymentdb.find({ reciever: req.user.id })
+        const donationinfo = await paymentdb.find({ reciever: req.user.id }).populate("donator", "name")
         // {id:donationinfo._id,amount:donationinfo.amount,message:donationinfo.message}
         res.status(200).json(donationinfo)
     } catch (err) {
