@@ -52,9 +52,9 @@ router.post('/login', async (req, res) => {
 
 router.post('/logout', (req, res) => {
     res.clearCookie("token", {
-        // httpOnly: true,
-        secure: false,
-        sameSite: "lax"
+        httpOnly: true,
+        secure: true,
+        sameSite: "none"
     })
 
     res.status(200).json({
