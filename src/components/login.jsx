@@ -1,6 +1,8 @@
 import { useState } from "react"
+import { useNavigate } from "react-router-dom"
 
 const Login = () => {
+    const navigate = useNavigate()
     const [formdata, setformdata] = useState({
         email: '',
         password: ''
@@ -31,10 +33,9 @@ const Login = () => {
             const data = await response.json()
             console.log(data)
             if (response.ok) {
-                window.location.href="/user/dashboard"
-            }
-            if (!response.ok) {
-                throw new Error(data.error || 'something went wrong')
+                navigate('/user/dashboard')
+            }else{
+                throw new Error(data.message || 'something went wrong')
             }
         } catch (error) {
             console.log(error)
