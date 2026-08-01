@@ -15,7 +15,6 @@ const Login = () => {
     const handlelogin = async (e)=>{
         e.preventDefault()
         if (!formdata.email || !formdata.password) {
-            console.log('empty...')
             return
         }
         try {
@@ -31,7 +30,6 @@ const Login = () => {
                 })
             })
             const data = await response.json()
-            console.log(data)
             if (response.ok) {
                 navigate('/user/dashboard')
             }else{

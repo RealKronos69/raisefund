@@ -11,7 +11,7 @@ router.post('/signup', async (req, res) => {
     const { name, email, password } = req.body
     const exists = await db.findOne({ email: req.body.email })
     if (exists) {
-        res.json({ message: 'user already exists!' })
+        res.status(401).json({ message: 'user already exists!' })
         return
     }
     const hashedpass = await bcrypt.hash(password, 5)
@@ -20,34 +20,38 @@ router.post('/signup', async (req, res) => {
 })
 
 router.post('/login', async (req, res) => {
-    const user = await db.findOne({ email: req.body.email })
-    if (!user) {
-        res.json({ message: "user don't exists" })
-        return
-    }
-    const ismatch = await bcrypt.compare(req.body.password, user.password)
-    if (!ismatch) {
-        res.json({ message: 'wrong password' })
-        return
-    }
-    const token = jwt.sign(
-        {
-            id: user._id,
-            email: user.email
-        },
-        process.env.JWT_SECRET,
-        {
-            expiresIn: "1000s"
+    try {
+        const user = await db.findOne({ email: req.body.email })
+        if (!user) {
+            res.status(401).json({ message: "user don't exists" })
+            return
         }
-    )
-    res.cookie("token", token, {
-        httpOnly: true,
-        secure: true,
-        sameSite: "none",
-        maxAge: 1000 * 1000
-    });
-    res.json({ message: 'logged in!', token: token })
+        const ismatch = await bcrypt.compare(req.body.password, user.password)
+        if (!ismatch) {
+            res.status(401).json({ message: 'wrong password' })
+            return
+        }
+        const token = jwt.sign(
+            {
+                id: user._id,
+                email: user.email
+            },
+            process.env.JWT_SECRET,
+            {
+                expiresIn: "1000s"
+            }
+        )
+        res.cookie("token", token, {
+            httpOnly: true,
+            secure: true,
+            sameSite: "none",
+            maxAge: 1000 * 1000
+        });
+        res.status(200).json({ message: 'logged in!', token: token })
 
+    } catch (error) {
+        res.status(500).json({ message: 'something went wrong' })
+    }
 })
 
 router.post('/logout', (req, res) => {
