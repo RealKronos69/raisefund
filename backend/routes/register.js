@@ -41,16 +41,16 @@ router.post('/login', async (req, res) => {
         }
     )
     res.cookie("token", token, {
-        //httpOnly:true,
-        secure: false,
-        sameSite: "lax",
+        httpOnly: true,
+        secure: true,
+        sameSite: "none",
         maxAge: 1000 * 1000
     });
     res.json({ message: 'logged in!', token: token })
 
 })
 
-router.post('/logout',(req,res)=>{
+router.post('/logout', (req, res) => {
     res.clearCookie("token", {
         // httpOnly: true,
         secure: false,
