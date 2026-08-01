@@ -1,5 +1,5 @@
 {
-  "name": "raisefund",
+  "name": "raisefund-frontend",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -11,15 +11,6 @@
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.3",
-    "bcrypt": "^6.0.0",
-    "cookie-parser": "^1.4.7",
-    "cors": "^2.8.6",
-    "crypto": "^1.0.1",
-    "dotenv": "^17.4.2",
-    "express": "^5.2.1",
-    "jsonwebtoken": "^9.0.3",
-    "mongoose": "^9.8.0",
-    "razorpay": "^2.9.8",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "react-router-dom": "^7.18.1",
