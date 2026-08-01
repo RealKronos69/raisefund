@@ -131,7 +131,7 @@ app.post('/verify-payment',auth, async (req, res) => {
         totaldonations: 1
       },
     })
-    await paymentdb.insertOne({ donator: decoded.id, reciever: donateid, amount: amount, orderID: razorpay_order_id, message: message })
+    await paymentdb.insertOne({ donator: decoded.id, receiver: donateid, amount: amount, orderID: razorpay_order_id, message: message })
     res.json({ message: 'successfull payment!', status: true })
 
   } catch (error) {

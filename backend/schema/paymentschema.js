@@ -15,7 +15,7 @@ const schema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "userinfo"
     },
-    reciever:{
+    receiver:{
         type: mongoose.Schema.Types.ObjectId,
         ref: "userinfo"
     },

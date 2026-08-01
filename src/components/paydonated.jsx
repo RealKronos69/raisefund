@@ -30,7 +30,7 @@ const PayDonated = () => {
                     return (
                         <div key={e._id} className="w-full shadow-md h-fit bg-white shrink-0 p-3 flex flex-col gap-2  rounded-md">
                             <div className="flex gap-2">
-                                <span className="text-xs rounded-md p-1 bg-gray-900 text-gray-100">To : {e.reciever.name}</span>
+                                <span className="text-xs rounded-md p-1 bg-gray-900 text-gray-100">To : {e.receiver.name}</span>
                                 <span className="text-xs rounded-md p-1 border-2">{new Date(e.createdAt).toLocaleTimeString()}</span>
                             </div>
                             <div className="text-sm text-gray-900 text-center p-1">
