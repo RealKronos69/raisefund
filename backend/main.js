@@ -28,7 +28,7 @@ const razorpay = new Razor({
 app.use(express.json())
 app.use(cookieParser());
 app.use(cors({
-  origin: "http://localhost:5173",
+  origin: "https://raisefund-rosy.vercel.app/",
   credentials: true
 }));
 app.use('/user', register)
