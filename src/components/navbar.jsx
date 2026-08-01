@@ -8,7 +8,7 @@ const Navbar = ()=>{
                 <h1 className="font-bold font-mono">RAISEFUND</h1>
                 <ul className="flex gap-5 *:cursor-pointer *:font-mono *:hover:text-blue-300 font-semibold text-sm">
                     <li onClick={()=>{navigate("/user/dashboard#DONATIONS")}}>Donations</li>
-                    <li>Trending</li>
+                    <li onClick={()=>{navigate("/#TRENDING")}}>Trending</li>
                     <li onClick={()=>{navigate("/#LEADERBOARD")}}>Leaderboard</li>
                 </ul>
             </nav>

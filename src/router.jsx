@@ -5,7 +5,6 @@ import Signup from "./components/signup"
 import Pay from "./components/pay";
 import Dashboard from "./components/dashboard"
 import Home from "./components/home"
-import Profile from "./components/profile"
 import Menu from "./components/menu"
 import Form from "./components/donationform"
 import Payments from "./components/payments"
@@ -26,10 +25,6 @@ const router = createBrowserRouter([
             {
                 path: '/user/dashboard',
                 element: <><Menu /><Dashboard /></>
-            },
-            {
-                path: '/user/profile',
-                element: <><Menu /><Profile /></>
             },
             {
                 path: '/user/donationform',
@@ -69,7 +64,7 @@ const router = createBrowserRouter([
         element: <Signup />
     },
     {
-        path: '/api/payment/:id',
+        path: '/api/payment',
         element: <Pay />
     }
 ])

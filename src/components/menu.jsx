@@ -21,7 +21,7 @@ const Menu = () => {
     const navigate = useNavigate()
     const handleLogout = async()=>{
         try {
-            const res = await fetch('http://localhost:3000/user/logout',{
+            const res = await fetch(`${import.meta.env.VITE_API_URL}/user/logout`,{
                 method:'POST',
                 credentials:"include"
             })
@@ -34,21 +34,21 @@ const Menu = () => {
         }
     }
     return (
-        <div ref={menu} className="fixed top-12 w-50 ease-in-out duration-100 -translate-x-38 rounded-r-3xl bg-gray-950 h-fit z-40">
+        <div ref={menu} className="fixed top-12 w-50 ease-in-out duration-100 -translate-x-38 rounded-r-3xl bg-white h-fit z-40 shadow-lg">
             <div className=" justify-between flex p-2 items-center">
-                <h1 className="text-white pl-3 font-mono font-bold"></h1>
-                <button className="bg-white w-8 h-8 p-1 rounded-3xl text-black font-bold cursor-pointer flex justify-center items-center" onClick={handlemenu}>
-                    {isopen ? <img className="w-full h-full invert" src={closeimg} /> : <img className="w-full h-full invert" src={menuimg} />}
+                <h1 className="text-gray-800 pl-3 font-mono font-bold"></h1>
+                <button className=" w-8 h-8 p-1 rounded-3xl text-white font-bold cursor-pointer flex justify-center items-center" onClick={handlemenu}>
+                    {isopen ? <img className="w-full h-full" src={closeimg} /> : <img className="w-full h-full" src={menuimg} />}
                 </button>
             </div>
-            <div ref={menucontent} className="h-80 w-full hidden p-2">
-                <div className="w-full h-full bg-gray-900 rounded-3xl *:text-gray-100 *:font-semibold flex justify-center items-center">
-                    <ul className="flex flex-col gap-4 *:hover:bg-gray-800 w-full *:cursor-pointer text-sm *:rounded-3xl">
-                        <NavLink to="/"><li className="w-full p-3 rounded-3xl flex justify-center items-center gap-4"><img src={homeimg} className="w-4 h-4 invert" />Home</li></NavLink>
-                        <NavLink to="/user/profile"><li className="w-full p-3 rounded-3xl flex justify-center items-center gap-4"><img src={userimg} className="w-4 h-4 invert" />Profile</li></NavLink>
-                        <NavLink to="/user/dashboard"><li className="w-full p-3 rounded-3xl flex justify-center items-center gap-4"><img src={dashimg} className="w-4 h-4 invert" />Dashboard</li></NavLink>
-                        <NavLink to="/user/payments"><li className="w-full p-3 rounded-3xl flex justify-center items-center gap-4"><img src={walletimg} className="w-4 h-4 invert" />Payments</li></NavLink>
-                        <li onClick={()=>{handleLogout()}} className="w-full p-3 rounded-3xl flex justify-center items-center gap-4"><img src={logoutimg} className="w-4 h-4 invert" />Logout</li>
+            <div ref={menucontent} className="h-fit w-full hidden p-2">
+                <div className="w-full h-full bg-gray-200 rounded-md *:text-gray-800 *:font-semibold flex justify-center items-center">
+                    <ul className="flex *:font-bold gap-1 flex-col *:hover:bg-blue-300 w-full *:cursor-pointer text-sm *:rounded-md">
+                        <NavLink to="/"><li className="w-full p-3 rounded-3xl flex pl-10 gap-4"><img src={homeimg} className="w-4 h-4" />Home</li></NavLink>
+                        {/* <NavLink to="/user/profile"><li className="w-full p-3 rounded-3xl flex justify-center items-center gap-4"><img src={userimg} className="w-4 h-4 invert" />Profile</li></NavLink> */}
+                        <NavLink className={({isActive})=> isActive ? 'bg-blue-300' : 'bg-gray-200'}  to="/user/dashboard"><li className="w-full p-3 rounded-3xl flex pl-10 gap-4"><img src={dashimg} className="w-4 h-4" />Dashboard</li></NavLink>
+                        <NavLink  className={({isActive})=> isActive ? 'bg-blue-300' : 'bg-gray-200'}  to="/user/payments"><li className="w-full p-3 rounded-3xl flex pl-10 gap-4"><img src={walletimg} className="w-4 h-4" />Payments</li></NavLink>
+                        <li onClick={()=>{handleLogout()}} className="w-full p-3 rounded-3xl flex pl-10 gap-4"><img src={logoutimg} className="w-4 h-4" />Logout</li>
                     </ul>
                 </div>
             </div>

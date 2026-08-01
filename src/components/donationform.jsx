@@ -16,7 +16,7 @@ const Form = () => {
     useEffect(() => {
         const fetchdetail = async () => {
             try {
-                const res = await fetch('http://localhost:3000/api/getuser', {
+                const res = await fetch(`${import.meta.env.VITE_API_URL}/api/getuser`, {
                     credentials: 'include'
                 })
                 const data = await res.json()
@@ -51,7 +51,7 @@ const Form = () => {
         }
         console.log(detail)
         try {
-            const response = await fetch('http://localhost:3000/user/donation', {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/user/donation`, {
                 method: 'POST',
                 credentials:'include',
                 headers: { 'Content-Type': 'application/json' },

@@ -7,7 +7,7 @@ const PayDonated = () => {
     useEffect(() => {
         const fetchinfo = async () => {
             try {
-                const res = await fetch('http://localhost:3000/user/donation/donatedinfo', {
+                const res = await fetch(`${import.meta.env.VITE_API_URL}/user/donation/donatedinfo`, {
                     credentials: 'include'
                 })
                 const data = await res.json()

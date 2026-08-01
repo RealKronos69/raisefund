@@ -1,6 +1,5 @@
 import { useRef, useState, useEffect } from "react"
 import { useLocation } from "react-router-dom"
-import msgimg from '../assets/message.png'
 import walletimg from '../assets/wallet.png'
 import donateimg from '../assets/donate.png'
 import donatedimg from '../assets/donated.png'
@@ -26,7 +25,7 @@ const Dashboard = () => {
     useEffect(() => {
         async function fetchdonationcards() {
             try {
-                const response = await fetch('http://localhost:3000/user/donation/otherfunds')
+                const response = await fetch(`${import.meta.env.VITE_API_URL}/user/donation/otherfunds`)
                 const data = await response.json()
                 if (response.ok) {
                     setdonationcards(data)
@@ -38,7 +37,7 @@ const Dashboard = () => {
         }
         async function fetchusercards() {
             try {
-                const response = await fetch('http://localhost:3000/user/donation/userfunds', {
+                const response = await fetch(`${import.meta.env.VITE_API_URL}/user/donation/userfunds`, {
                     credentials: 'include'
                 })
                 const data = await response.json()
@@ -52,7 +51,7 @@ const Dashboard = () => {
         }
         async function userstats() {
             try {
-                const response = await fetch('http://localhost:3000/user/donation/userstats', {
+                const response = await fetch(`${import.meta.env.VITE_API_URL}/user/donation/userstats`, {
                     credentials: 'include'
                 })
                 const data = await response.json()
@@ -83,7 +82,7 @@ const Dashboard = () => {
 
     const handleDelete = async (ID) => {
         try {
-            const res = await fetch(`http://localhost:3000/user/donation/delete/${ID}`, {
+            const res = await fetch(`${import.meta.env.VITE_API_URL}/user/donation/delete/${ID}`, {
                 method: 'DELETE',
                 credentials: 'include'
             })
@@ -93,11 +92,12 @@ const Dashboard = () => {
         } catch (error) {
             console.log(error)
         }
+        window.location.reload()
     }
 
     const handleWithdraw = async (USERID, CAMPAIGNID, RAISEDAMOUNT, REQUESTAMOUNT) => {
         try {
-            const res = await fetch('http://localhost:3000/withdraw', {
+            const res = await fetch(`${import.meta.env.VITE_API_URL}/withdraw`, {
                 method: "POST",
                 credentials: 'include',
                 headers: { "Content-Type": "application/json" },
@@ -113,6 +113,7 @@ const Dashboard = () => {
         } catch (error) {
             console.log(error)
         }
+        window.location.reload()
     }
 
     const filteredCards = donationcards.filter((card) =>
@@ -252,7 +253,7 @@ const Dashboard = () => {
                                         {e.cause}
                                     </div>
                                 </div>
-                                <button onClick={() => { navigate(`/api/payment/${e.userid}`) }} className="bg-gray-900 text-white cursor-pointer hover:scale-101 rounded-3xl w-full p-3 font-semibold">Donate</button>
+                                <button onClick={() => { navigate(`/api/payment?donateid=${e.userid}&campaignid=${e.campaignId}`) }} className="bg-gray-900 text-white cursor-pointer hover:scale-101 rounded-3xl w-full p-3 font-semibold">Donate</button>
                             </div>
                         )
                     })}

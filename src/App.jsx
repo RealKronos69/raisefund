@@ -10,7 +10,7 @@ import { Outlet } from "react-router-dom"
 function App() {
   
   return (
-    <section>
+    <section className="">
       <Outlet/>
     </section>
   )

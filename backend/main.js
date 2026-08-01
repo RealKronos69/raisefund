@@ -4,15 +4,16 @@ import Razor from 'razorpay'
 import dotenv from 'dotenv'
 import register from './routes/register.js'
 import dform from './routes/donation.js'
-import cookieParser from 'cookie-parser'
-import jwt from 'jsonwebtoken'
-import donatedb from './donationschema.js'
-import userdb from './userschema.js'
-import paymentdb from './paymentschema.js'
-import withdrawdb from './withdrawschema.js'
-import crypto from 'crypto'
-import auth from './middleware/auth.js'
 import explore from './routes/explore.js'
+import cookieParser from 'cookie-parser'
+import donatedb from './schema/donationschema.js'
+import userdb from './schema/userschema.js'
+import paymentdb from './schema/paymentschema.js'
+import withdrawdb from './schema/withdrawschema.js'
+import crypto from 'crypto'
+import jwt from 'jsonwebtoken'
+import auth from './middleware/auth.js'
+
 dotenv.config({
   path: "./backend/.env",
 });
@@ -88,6 +89,7 @@ app.post('/verify-payment',auth, async (req, res) => {
   try {
     const {
       donateid,
+      campaignid,
       message,
       amount,
       razorpay_order_id,
@@ -113,7 +115,7 @@ app.post('/verify-payment',auth, async (req, res) => {
       return res.json({ message: 'payment verification failed!', status: false })
     }
 
-    await donatedb.findOneAndUpdate({ userid: donateid }, {
+    await donatedb.findOneAndUpdate({ campaignId:  campaignid}, {
       $inc: {
         raised: amount
       }

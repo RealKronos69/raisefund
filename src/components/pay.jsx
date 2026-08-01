@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react"
-import { useParams } from "react-router-dom"
+import { useSearchParams } from "react-router-dom"
 import { useNavigate } from "react-router-dom"
 
 
@@ -7,8 +7,22 @@ function Pay() {
   const nm = useRef()
   const msg = useRef()
   const amt = useRef()
-  const params = useParams()
+  const [searchParams] = useSearchParams()
+  const DONATEID = searchParams.get("donateid")
+  const CAMPAIGNID = searchParams.get("campaignid")
   const navigate = useNavigate()
+  useEffect(() => {
+    const fetchinfo = async () => {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api`, {
+        credentials: "include"
+      })
+      const data = await res.json()
+      if (!res.ok) {
+        navigate('/user/login')
+      }
+    }
+    fetchinfo()
+  }, [])
 
   const fetchdata = async (NAME, MESSAGE, AMOUNT) => {
     if (NAME === "" || MESSAGE === "" || AMOUNT === "") {
@@ -19,14 +33,14 @@ function Pay() {
       console.log('invalid amount')
       return
     }
-    const response = await fetch('http://localhost:3000/create-order', {
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/create-order`, {
       method: 'POST',
       credentials: "include",
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        donateid: params.id,
+        donateid: DONATEID,
         amount: AMOUNT
       })
     })
@@ -47,14 +61,15 @@ function Pay() {
       // redirect: true,
 
       handler: async function (response) {
-        const res = await fetch("http://localhost:3000/verify-payment", {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/verify-payment`, {
           method: "POST",
           credentials: "include",
           headers: {
             "Content-Type": "application/json"
           },
           body: JSON.stringify({
-            donateid: params.id,
+            donateid: DONATEID,
+            campaignid: CAMPAIGNID,
             message: MESSAGE,
             amount: AMOUNT,
             ...response
@@ -67,7 +82,7 @@ function Pay() {
         }
         if (data.status) {
           navigate("/user/payments")
-          return 
+          return
         }
       },
 
@@ -99,16 +114,16 @@ function Pay() {
           <textarea ref={msg} className="bg-gray-100 w-full h-20 p-3 focus:outline-0" name="message" rows="4" cols="50" placeholder=""></textarea>
         </div>
         <div className="flex gap-2 flex-wrap">
-          <button onClick={(e) => { amt.current.value = e.target.textContent }} className="p-3 text-xs bg-gray-800 font-semibold font-mono text-amber-50 rounded-2xl cursor-pointer">10</button>
-          <button onClick={(e) => { amt.current.value = e.target.textContent }} className="p-3 text-xs bg-gray-800 font-semibold font-mono text-amber-50 rounded-2xl cursor-pointer">50</button>
-          <button onClick={(e) => { amt.current.value = e.target.textContent }} className="p-3 text-xs bg-gray-800 font-semibold font-mono text-amber-50 rounded-2xl cursor-pointer">100</button>
-          <button onClick={(e) => { amt.current.value = e.target.textContent }} className="p-3 text-xs bg-gray-800 font-semibold font-mono text-amber-50 rounded-2xl cursor-pointer">500</button>
-          <button onClick={(e) => { amt.current.value = e.target.textContent }} className="p-3 text-xs bg-gray-800 font-semibold font-mono text-amber-50 rounded-2xl cursor-pointer">1000</button>
-          <button onClick={(e) => { amt.current.value = e.target.textContent }} className="p-3 text-xs bg-gray-800 font-semibold font-mono text-amber-50 rounded-2xl cursor-pointer">10000</button>
+          <button onClick={(e) => { amt.current.value = parseInt(amt.current.value) + parseInt(e.target.textContent) }} className="p-3 text-xs bg-gray-800 font-semibold font-mono text-amber-50 rounded-2xl cursor-pointer">10</button>
+          <button onClick={(e) => { amt.current.value = parseInt(amt.current.value) + parseInt(e.target.textContent) }} className="p-3 text-xs bg-gray-800 font-semibold font-mono text-amber-50 rounded-2xl cursor-pointer">50</button>
+          <button onClick={(e) => { amt.current.value = parseInt(amt.current.value) + parseInt(e.target.textContent) }} className="p-3 text-xs bg-gray-800 font-semibold font-mono text-amber-50 rounded-2xl cursor-pointer">100</button>
+          <button onClick={(e) => { amt.current.value = parseInt(amt.current.value) + parseInt(e.target.textContent) }} className="p-3 text-xs bg-gray-800 font-semibold font-mono text-amber-50 rounded-2xl cursor-pointer">500</button>
+          <button onClick={(e) => { amt.current.value = parseInt(amt.current.value) + parseInt(e.target.textContent) }} className="p-3 text-xs bg-gray-800 font-semibold font-mono text-amber-50 rounded-2xl cursor-pointer">1000</button>
+          <button onClick={(e) => { amt.current.value = parseInt(amt.current.value) + parseInt(e.target.textContent) }} className="p-3 text-xs bg-gray-800 font-semibold font-mono text-amber-50 rounded-2xl cursor-pointer">10000</button>
         </div>
         <div>
           <h1 className="text-gray-700 font-semibold font-mono pl-1 text-sm">amount</h1>
-          <input ref={amt} className="bg-gray-200 w-full h-10 p-3 focus:outline-0 font-mono text-gray-800 font-bold" type="number" min={10} max={10000} step="1" />
+          <input onKeyDown={(e) => ["e", "E", "+", "-"].includes(e.key) && e.preventDefault()} defaultValue={10} ref={amt} className="bg-gray-200 w-full h-10 p-3 focus:outline-0 font-mono text-gray-800 font-bold" type="number" min={10} max={10000} step="1" onInput={(e)=>{if(parseInt(e.target.value) > 10000) e.target.value = 10000}} />
         </div>
         <button onClick={() => { fetchdata(nm.current.value, msg.current.value, amt.current.value) }} className="w-full rounded-2xl p-3 bg-yellow-300 hover:scale-101 text-yellow-900 font-mono font-bold cursor-pointer">pay</button>
       </div>

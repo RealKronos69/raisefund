@@ -7,7 +7,7 @@ const WithdrawInfo = () => {
     useEffect(() => {
         const fetchinfo = async () => {
             try {
-                const res = await fetch('http://localhost:3000/user/donation/withdrawinfo', {
+                const res = await fetch(`${import.meta.env.VITE_API_URL}/user/donation/withdrawinfo`, {
                     credentials: 'include'
                 })
                 const data = await res.json()

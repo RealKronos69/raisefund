@@ -1,10 +1,10 @@
-import donationdb from '../donationschema.js'
-import paymentdb from '../paymentschema.js'
-import userdb from '../userschema.js'
+import donationdb from '../schema/donationschema.js'
+import paymentdb from '../schema/paymentschema.js'
+import userdb from '../schema/userschema.js'
+import withdrawdb from '../schema/withdrawschema.js'
 import express from 'express'
 import jwt from 'jsonwebtoken'
 import auth from '../middleware/auth.js'
-import withdrawdb from '../withdrawschema.js'
 const router = express.Router()
 
 router.post('/',auth, async (req, res) => {
